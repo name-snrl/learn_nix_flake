@@ -5,6 +5,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nvimpager.url = "github:lucc/nvimpager";
     nvim-nightly.url = "github:nix-community/neovim-nightly-overlay";
+    hw-config = {
+      url = "file:///etc/nixos/hardware-configuration.nix";
+      flake = false;
+    };
     ssh-keys = {
       url = "https://github.com/name-snrl.keys";
       flake = false;
@@ -21,16 +25,16 @@
       system = "x86_64-linux";
       specialArgs.inputs = inputs;
       modules = [
+
+        (import inputs.hw-config)
+
+        ./bash.nix
+        ./git.nix
+        ./starship.nix
+
         ({ lib, config, pkgs, inputs, ... }:
 
         {
-          imports = [
-            ./hardware-configuration.nix
-            ./bash.nix
-            ./git.nix
-            ./starship.nix
-          ];
-
           boot = {
             loader = {
               efi.canTouchEfiVariables = false;
