@@ -2,6 +2,7 @@
   description = "simple nixos config";
 
   inputs = {
+    main.url = "github:name-snrl/nixos-configuration";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nvimpager.url = "github:lucc/nvimpager";
     nvim-nightly.url = "github:nix-community/neovim-nightly-overlay";
@@ -19,7 +20,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, ... }: {
+  outputs = inputs@{ self, nixpkgs, main, ... }: {
 
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -28,9 +29,10 @@
 
         (import inputs.hw-config)
 
-        ./bash.nix
-        ./git.nix
-        ./starship.nix
+        main.nixosModules.global_variables
+        main.nixosProfiles.bash
+        main.nixosProfiles.git
+        main.nixosProfiles.starship
 
         ({ lib, config, pkgs, inputs, ... }:
 
