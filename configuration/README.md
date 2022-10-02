@@ -24,8 +24,9 @@
   ```
 - Clone the repo and update the hw-config input:
   ```bash
-  nix-shell -p git
+  nix-shell -p git nixUnstable
   git clone https://github.com/name-snrl/learn_nix_flake
+  sed -i 's#file:///etc#file:///mnt/etc#g' flake.nix
   cd learn_nix_flake/configuration/
   nix --extra-experimental-features 'nix-command flakes' flake update hw-config
   ```
