@@ -26,8 +26,8 @@
   ```bash
   nix-shell -p git nixUnstable
   git clone https://github.com/name-snrl/learn_nix_flake
-  sed -i 's#file:///etc#file:///mnt/etc#g' flake.nix
   cd learn_nix_flake/configuration/
-  nix --extra-experimental-features 'nix-command flakes' flake update hw-config
+  sed -i 's#file:///etc#file:///mnt/etc#g' flake.nix
+  nix --extra-experimental-features 'nix-command flakes' flake update
   ```
 - Install NixOS - `nixos-install --flake .#nixos`
