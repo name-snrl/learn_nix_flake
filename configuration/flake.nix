@@ -3,6 +3,7 @@
 
   inputs = {
     main.url = "github:name-snrl/nixos-configuration";
+    main.inputs.nixpkgs.follows = "";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nvimpager.url = "github:lucc/nvimpager";
     nvim-nightly.url = "github:nix-community/neovim-nightly-overlay";
@@ -167,6 +168,7 @@
 
             environment.defaultPackages = [];
             environment.systemPackages = with pkgs; [
+              perl
               pciutils
               usbutils
               inetutils
