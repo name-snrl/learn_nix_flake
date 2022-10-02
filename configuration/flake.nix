@@ -165,6 +165,7 @@
               };
             };
 
+            environment.defaultPackages = [];
             environment.systemPackages = with pkgs; [
               pciutils
               usbutils
