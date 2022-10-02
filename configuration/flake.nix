@@ -31,6 +31,7 @@
 
         main.nixosModules.global_variables
         main.nixosProfiles.bash
+        main.nixosProfiles.neovim
         main.nixosProfiles.git
         main.nixosProfiles.starship
 
@@ -127,17 +128,6 @@
           };
 
           programs = {
-            neovim = {
-              enable = true;
-              package = pkgs.neovim-nightly;
-              defaultEditor = true;
-              vimAlias = true;
-              viAlias = true;
-              configure.customRC = ''
-                luafile $HOME/.config/nvim/init.lua
-              '';
-            };
-
             tmux = {
               enable = true;
               keyMode = "vi";
