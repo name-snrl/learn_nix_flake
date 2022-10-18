@@ -3,10 +3,12 @@
 
   inputs = {
     main.url = "github:name-snrl/nixos-configuration";
-    main.inputs.nixpkgs.follows = "";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nvimpager.url = "github:lucc/nvimpager";
-    nvim-nightly.url = "github:nix-community/neovim-nightly-overlay";
+
+    nvim = {
+      url = "github:name-snrl/nvim";
+      flake = false;
+    };
     hw-config = {
       url = "file:///etc/nixos/hardware-configuration.nix";
       flake = false;
@@ -23,8 +25,16 @@
 
   outputs = inputs@{ self, nixpkgs, main, ... }: {
 
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
+      pkgs = import inputs.nixpkgs {
+        overlays = [ main.overlay ];
+        localSystem = { inherit system; };
+        config = {
+          allowUnfree = true;
+          joypixels.acceptLicense = true;
+        };
+      };
       specialArgs.inputs = inputs;
       modules = [
 
@@ -53,10 +63,17 @@
               kernelPackages = pkgs.linuxPackages_zen;
             };
 
-            nix.registry.nixpkgs.flake = inputs.nixpkgs;
-            nix.settings = {
-              experimental-features = [ "nix-command" "flakes" ];
-              auto-optimise-store = true;
+            nix = {
+              registry.nixpkgs.flake = inputs.nixpkgs;
+              registry.self.flake = inputs.self;
+              registry.np.flake = inputs.nixpkgs;
+
+              nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+
+              settings = {
+                experimental-features = [ "nix-command" "flakes" ];
+                auto-optimise-store = true;
+              };
             };
 
             i18n.defaultLocale = "en_GB.UTF-8";
@@ -91,44 +108,11 @@
             services.openssh.enable = true;
             users.users.root.openssh.authorizedKeys.keyFiles = [ inputs.ssh-keys ];
 
-            environment.shellAliases = {
-              sudo = "sudo "; # this will make sudo work with shell aliases/man alias
-              sctl = "systemctl";
-              grep = "grep -E";
-              sed = "sed -E";
-
-              # misc
-              se = "sudoedit";
-              pg = "$PAGER";
-              ls = "exa";
-              rg = "rg --follow --hidden --smart-case --no-messages";
-              fd = "fd --follow --hidden";
-              dt = "difft";
-              tk = "tokei";
-              cat = "bat --pager=never --style=changes,rule,numbers,snip";
-            };
-
-            nixpkgs = {
-              # Neovim overlay
-              overlays = [
-                inputs.nvim-nightly.overlay
-                inputs.nvimpager.overlay
-
-                (final: prev: {
-                  nvimpager = prev.nvimpager.overrideAttrs (oa: {
-                    preBuild = ''
-                      version=$(bash ./nvimpager -v | sed 's/.* //')
-                      substituteInPlace nvimpager --replace '/nvimpager/init.vim' '/nvim/pager_init.lua'
-                    '';
-                  });
-                })
-              ];
-
-              # Allow unfree pkgs
-              config = { allowUnfree = true; };
-            };
-
             programs = {
+
+              nano.syntaxHighlight = false;
+              less.enable = lib.mkForce false;
+
               tmux = {
                 enable = true;
                 keyMode = "vi";
@@ -166,52 +150,60 @@
               };
             };
 
-            environment.defaultPackages = [];
-            environment.systemPackages = with pkgs; [
-              perl
-              pciutils
-              usbutils
-              inetutils
-              nixos-option
+            environment = with pkgs; {
 
-              # code
-              gnumake
-              gcc
-              python310
-              python310Packages.python-lsp-server
-              shellcheck
-              nodePackages.bash-language-server
-              rnix-lsp
-              sumneko-lua-language-server
-              ltex-ls
+              shellAliases = {
+                sudo = "sudo "; # this will make sudo work with shell aliases/man alias
+                sctl = "systemctl";
+                grep = "grep -E";
+                sed = "sed -E";
 
-              # utilities
-              (pkgs.runCommand "less" { } ''
-                mkdir -p "$out/bin"
-                ln -sfn "${pkgs.nvimpager}/bin/nvimpager" "$out/bin/less"
-              '')
-              difftastic
-              tokei
-              tealdeer
-              file
-              tree
-              fzf
-              (pkgs.runCommand "jq" { } ''
-                mkdir -p "$out/bin"
-                ln -sfn "${pkgs.gojq}/bin/gojq" "$out/bin/jq"
-              '') # use gojq as jq
-              jshon
-              wget
-              gptfdisk
-              unzip
+                # misc
+                se = "sudoedit";
+                pg = "$PAGER";
+                ls = "exa";
+                rg = "rg --follow --hidden --smart-case --no-messages";
+                fd = "fd --follow --hidden";
+                dt = "difft";
+                tk = "tokei";
+                cat = "bat --pager=never --style=changes,rule,numbers,snip";
+              };
 
-              # GNU replacement
-              exa
-              fd
-              bat
-              ripgrep
-              zoxide
-            ];
+              defaultPackages = [ rsync perl ];
+
+              systemPackages = [
+                pciutils
+                usbutils
+                inetutils
+                nixos-option
+
+                python310 # calculator
+
+                # utilities
+                nvimpager
+                difftastic
+                tokei
+                tealdeer
+                file
+                tree
+                fzf
+                (pkgs.runCommand "jq" { } ''
+                  mkdir -p "$out/bin"
+                  ln -sfn "${pkgs.gojq}/bin/gojq" "$out/bin/jq"
+                '') # use gojq as jq
+                jshon
+                wget
+                gptfdisk
+                unzip
+
+                # GNU replacement
+                exa
+                fd
+                bat
+                ripgrep
+                zoxide
+              ];
+            };
 
             system.stateVersion = "22.11";
           })
