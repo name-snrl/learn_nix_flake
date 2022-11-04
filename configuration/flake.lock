@@ -134,11 +134,11 @@
         "nvimpager": "nvimpager"
       },
       "locked": {
-        "lastModified": 1667490045,
-        "narHash": "sha256-Syr0LMaUPvJeIzmyHYyPC8tgLaopHBz7dpqjgMp0+KY=",
+        "lastModified": 1667573109,
+        "narHash": "sha256-OZU5O8xhYKUTxwG9zan7n3UUhXmXf3fHjExJVljrVFI=",
         "owner": "name-snrl",
         "repo": "nixos-configuration",
-        "rev": "be2c025505b3dc685cb2866499b8579a5a8c72a7",
+        "rev": "c0e91031209b104ba24e084ab49f17acece5004d",
         "type": "github"
       },
       "original": {

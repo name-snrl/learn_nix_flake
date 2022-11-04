@@ -183,7 +183,7 @@
                   inetutils
 
                   # base
-                  nvim
+                  nvim.mini
                   nvimpager
                   difftastic
                   gojq-as-jq
