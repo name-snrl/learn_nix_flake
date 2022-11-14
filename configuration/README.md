@@ -25,9 +25,14 @@
 - Clone the repo and update the hw-config input:
   ```bash
   nix-shell -p git nixUnstable
-  git clone https://github.com/name-snrl/learn_nix_flake
-  cd learn_nix_flake/configuration/
-  sed -i 's#file:///etc#file:///mnt/etc#g' flake.nix
-  nix --extra-experimental-features 'nix-command flakes' flake update
   ```
-- Install NixOS - `nixos-install --flake .#nixos`
+  ```bash
+  git clone https://github.com/name-snrl/learn_nix_flake
+  ```
+  ```bash
+  cd learn_nix_flake/configuration/ && sed -i 's#file:///etc#file:///mnt/etc#g' flake.nix
+  ```
+- Install NixOS:
+  ```bash
+  nixos-install --flake .#nixos
+  ```
