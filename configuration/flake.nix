@@ -3,7 +3,7 @@
 
   inputs = {
     main.url = "github:name-snrl/nixos-configuration";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.follows = "main/nixpkgs";
 
     hw-config = {
       url = "file:///etc/nixos/hardware-configuration.nix";
