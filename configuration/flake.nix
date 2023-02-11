@@ -52,6 +52,7 @@
                 kernelPackages = pkgs.linuxPackages_zen;
               };
 
+              zramSwap.enable = true;
               services.openssh.enable = true;
 
               users = {
