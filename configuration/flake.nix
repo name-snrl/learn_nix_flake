@@ -39,6 +39,7 @@
           (import inputs.hw-config)
 
           main.nixosProfiles.fish
+          main.nixosProfiles.aliases
           main.nixosProfiles.git
           main.nixosProfiles.nix
           main.nixosProfiles.starship
@@ -108,29 +109,12 @@
 
               environment = with pkgs; {
 
-                shellAliases = {
-                  # NixOS
-                  nboot = "sudo nixos-rebuild boot --flake ~/learn_nix_flake/configuration";
-                  nswitch = "sudo nixos-rebuild switch --flake ~/learn_nix_flake/configuration";
-                  nupdate = "nix flake update ~/learn_nix_flake/configuration";
-                  nlock = "nix flake lock ~/learn_nix_flake/configuration";
-                  nclear = "sudo nix-collect-garbage --delete-old";
-
-                  # system
-                  sudo = "sudo ";
-                  sctl = "systemctl";
-                  grep = "grep -E";
-                  sed = "sed -E";
-
-                  # misc
-                  se = "sudoedit";
-                  pg = "$PAGER";
-                  ls = "exa";
-                  rg = "rg --follow --hidden --smart-case --no-messages";
-                  fd = "fd --follow --hidden";
-                  dt = "difft";
-                  tk = "tokei";
-                  cat = "bat --pager=never --style=changes,rule,numbers,snip";
+                shellAliases = lib.mkForce {
+                  nboot = "nixos-rebuild boot --use-remote-sudo --fast --flake ~/learn_nix_flake/configuration";
+                  nswitch = "nixos-rebuild switch --use-remote-sudo --fast --flake ~/learn_nix_flake/configuration";
+                  nbuild = "nix build ~/learn_nix_flake/configuration";
+                  nupdate = "nix flake update --commit-lock-file ~/learn_nix_flake/configuration";
+                  nlock = "nix flake lock --commit-lock-file ~/learn_nix_flake/configuration";
                 };
 
                 defaultPackages = [ rsync perl ];
