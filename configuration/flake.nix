@@ -4,6 +4,7 @@
   inputs = {
     main.url = "github:name-snrl/nixos-configuration";
     nixpkgs.follows = "main/nixpkgs";
+    flake-registry.follows = "main/flake-registry";
 
     hw-config = {
       url = "file:///etc/nixos/hardware-configuration.nix";
@@ -36,8 +37,10 @@
           (import inputs.hw-config)
 
           main.nixosModules.global_variables
+
           main.nixosProfiles.fish
           main.nixosProfiles.git
+          main.nixosProfiles.nix
           main.nixosProfiles.starship
 
           ({ lib, config, pkgs, inputs, ... }:
@@ -55,18 +58,6 @@
                 };
 
                 kernelPackages = pkgs.linuxPackages_zen;
-              };
-
-              nix = {
-                registry.self.flake = inputs.self;
-                registry.np.flake = inputs.nixpkgs;
-
-                nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-
-                settings = {
-                  experimental-features = [ "nix-command" "flakes" ];
-                  auto-optimise-store = true;
-                };
               };
 
               i18n.defaultLocale = "en_GB.UTF-8";
