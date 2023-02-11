@@ -38,8 +38,6 @@
 
           (import inputs.hw-config)
 
-          main.nixosModules.global_variables
-
           main.nixosProfiles.fish
           main.nixosProfiles.git
           main.nixosProfiles.nix
@@ -49,49 +47,13 @@
 
             {
               boot = {
-                loader = {
-                  efi.canTouchEfiVariables = false;
-                  timeout = 0;
-                  systemd-boot = {
-                    enable = true;
-                    configurationLimit = 20;
-                    consoleMode = "max";
-                  };
-                };
-
+                loader.timeout = 0;
+                loader.systemd-boot.enable = true;
                 kernelPackages = pkgs.linuxPackages_zen;
               };
 
-              i18n.defaultLocale = "en_GB.UTF-8";
-              time = {
-                timeZone = "Asia/Yekaterinburg";
-                hardwareClockInLocalTime = true;
-              };
-
-              console = {
-                font = "Lat2-Terminus16";
-                keyMap = "us";
-                colors = [
-                  "2e3440"
-                  "d36265"
-                  "88ce7c"
-                  "e7e18c"
-                  "5297cf"
-                  "bf6ea3"
-                  "5baebf"
-                  "cad8e8"
-                  "3b4252"
-                  "ec6e71"
-                  "a1f493"
-                  "fff796"
-                  "74b8ef"
-                  "e28ec5"
-                  "85d1e2"
-                  "dfeaf5"
-                ];
-              };
-
               services.openssh.enable = true;
+
               users = {
                 mutableUsers = false;
                 users = {
@@ -108,14 +70,8 @@
               };
 
               programs = {
-
                 nano.syntaxHighlight = false;
                 less.enable = lib.mkForce false;
-
-                tmux = {
-                  enable = true;
-                  keyMode = "vi";
-                };
 
                 htop = {
                   enable = true;
