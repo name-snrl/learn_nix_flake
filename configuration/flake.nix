@@ -120,12 +120,6 @@
                 defaultPackages = [ rsync perl ];
 
                 systemPackages = [
-                  # system shit
-                  pciutils
-                  usbutils
-                  inetutils
-
-                  # base
                   nvim.mini
                   nvimpager
                   difftastic
@@ -137,10 +131,7 @@
                   file
                   tree
                   wget
-
-                  # cli
-                  et
-                  fzf # for zoxide/fzf-bash-complete
+                  fzf
                   zoxide
                   tokei
                   tealdeer
@@ -151,6 +142,5 @@
             })
         ];
       };
-
     };
 }
