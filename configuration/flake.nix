@@ -28,6 +28,8 @@
     {
       legacyPackages.x86_64-linux = pkgsFor "x86_64-linux";
 
+      packages.x86_64-linux.default = self.nixosConfigurations.nixos.config.system.build.toplevel;
+
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         pkgs = pkgsFor system;
