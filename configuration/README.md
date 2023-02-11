@@ -27,10 +27,10 @@
   nix-shell -p git nixUnstable
   ```
   ```bash
-  git clone https://github.com/name-snrl/learn_nix_flake
+  git clone https://github.com/name-snrl/learn_nix_flake && cd learn_nix_flake/configuration
   ```
   ```bash
-  cd learn_nix_flake/configuration/ && sed -i 's#file:///etc#file:///mnt/etc#g' flake.nix
+  git checkout colmena && sed -i 's#file:///etc#file:///mnt/etc#g' flake.nix
   ```
 - Install NixOS:
   ```bash
