@@ -8,6 +8,8 @@
 
   zramSwap.enable = true;
   services.openssh.enable = true;
+  services.openssh.settings.PermitRootLogin = "no";
+
 
   users = {
     mutableUsers = false;
@@ -24,13 +26,16 @@
     };
   };
 
-  security.sudo.extraRules = [{
-    users = [ config.users.users.default.name ];
-    commands = [
-      { options = [ "NOPASSWD" ]; command = "/nix/store/*/bin/switch-to-configuration"; }
-      { options = [ "NOPASSWD" ]; command = "/run/current-system/sw/bin/nix-env"; }
-    ];
-  }];
+  security.sudo = {
+    wheelNeedsPassword = true;
+    extraRules = [{
+      users = [ config.users.users.default.name ];
+      commands = [
+        { options = [ "NOPASSWD" ]; command = "/nix/store/*/bin/switch-to-configuration"; }
+        { options = [ "NOPASSWD" ]; command = "/run/current-system/sw/bin/nix-env"; }
+      ];
+    }];
+  };
 
   programs = {
     nano.syntaxHighlight = false;
